@@ -1,0 +1,9 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Cart",
+	"webDir": "build",
+	"bundledWebRuntime": false,
+	"server": {
+		"url": "http://10.0.0.31:8100"
+	}
+}

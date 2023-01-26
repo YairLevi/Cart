@@ -1,0 +1,26 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.checkbox {
+  display: flex;
+  background-color: white;
+  align-items: center;
+
+  &>* {
+    padding: 5px;
+  }
+
+  .checkbox-icon {
+    font-size: 25px;
+
+    &.checked {
+      color: #09ad08;
+    }
+
+    &.unchecked {
+      color: lightgray;
+    }
+  }
+}
