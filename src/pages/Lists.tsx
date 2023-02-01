@@ -1,18 +1,29 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+import Dropdown from "../components/Dropdown/Dropdown";
 
 const Lists: React.FC = () => {
+  const categories = [
+    {
+      name: "Dairy",
+      products: ["Milk", 'Cheese']
+    },
+    {
+      name: "Meats",
+      products: ['Rib-eye', 'Stake']
+    },
+    {
+      name: "Vegetables",
+      products: [],
+    }
+  ]
+
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Lists</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent fullscreen>
-        <ExploreContainer />
+        <div className={"header"}>
+          <p>Lists</p>
+        </div>
       </IonContent>
     </IonPage>
   );

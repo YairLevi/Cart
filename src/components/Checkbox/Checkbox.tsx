@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-import { faCircle } from "@fortawesome/free-regular-svg-icons";
+import { checkmarkCircle, ellipseOutline } from "ionicons/icons";
+import { IonIcon } from "@ionic/react";
 import './Checkbox.scss';
 
 
@@ -15,12 +14,12 @@ export function Checkbox(props: Props) {
 
   const CheckedIcon = () => (
     <div className='checkbox-icon checked'>
-      <FontAwesomeIcon icon={faCircleCheck} />
+      <IonIcon icon={checkmarkCircle} />
     </div>
   )
   const UncheckedIcon = () => (
     <div className='checkbox-icon unchecked'>
-      <FontAwesomeIcon icon={faCircle} />
+      <IonIcon icon={ellipseOutline} />
     </div>
   )
 
