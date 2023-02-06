@@ -1,13 +1,15 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { IonButton, IonContent, IonIcon, IonPage, IonSelect, IonSelectOption } from "@ionic/react";
 import If from '../components/If'
 import Dropdown from "../components/Dropdown/Dropdown";
-import { Category } from "../controllers/disk/types";
+import { Category } from "../controllers/types";
 import { trashOutline } from "ionicons/icons";
 import './Products.scss'
+import { DiskController } from "../controllers/disk/diskController";
 
 
 export default function Products() {
+  // const { products, addProduct, addCategory, deleteProduct, deleteCategory } = useProducts()
   const [open, setOpen] = useState(false)
   const [categorySelection, setCategorySelection] = useState('')
   const productInputRef = useRef<HTMLInputElement>(null)
@@ -41,6 +43,12 @@ export default function Products() {
   //     encoding: Encoding.UTF8,
   //   })
   // }
+
+  useEffect(() => {
+    const controller = new DiskController()
+    controller.loadData()
+
+  }, [])
 
   function addProduct() {
     if (productInputRef.current!.value === '' || categorySelection === '') return
