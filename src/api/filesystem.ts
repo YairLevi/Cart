@@ -1,15 +1,5 @@
-import {
-  Directory,
-  Encoding,
-  FileInfo,
-  Filesystem as fs
-} from "@capacitor/filesystem";
+import { Directory, Encoding, FileInfo, Filesystem as fs } from "@capacitor/filesystem";
 
-
-export const Types = {
-  File: 'file',
-  Directory: 'directory'
-}
 
 export class FileSystem {
   directory: Directory
@@ -18,7 +8,11 @@ export class FileSystem {
     this.directory = dir
   }
 
-  async exists(path: string, type: string): Promise<boolean> {
+  setDirectory(dir: Directory) {
+    this.directory = dir
+  }
+
+  async exists(path: string): Promise<boolean> {
     const options = {
       directory: this.directory,
       path: path
@@ -33,8 +27,8 @@ export class FileSystem {
     }
   }
 
-  async createDir(path: string): Promise<void> {
-    const dirExists = await this.exists(path, Types.Directory)
+  async makeDir(path: string): Promise<void> {
+    const dirExists = await this.exists(path)
     if (dirExists) return
 
     await fs.mkdir({
@@ -44,9 +38,18 @@ export class FileSystem {
     })
   }
 
+  async writeFile(path: string, data: string): Promise<void> {
+    await fs.writeFile({
+      path: path,
+      directory: this.directory,
+      encoding: Encoding.UTF8,
+      data: data
+    })
+  }
+
   async readDir(path: string): Promise<FileInfo[]> {
-    const folderExists = await this.exists(path, Types.Directory)
-    if (!folderExists) return []
+    const dirExists = await this.exists(path)
+    if (!dirExists) return []
 
     const folderContents = await fs.readdir({
       path: path,
@@ -57,6 +60,9 @@ export class FileSystem {
   }
 
   async readFile(path: string) {
+    const fileExists = await this.exists(path)
+    if (!fileExists) return {}
+
     const contents = await fs.readFile({
       path: path,
       directory: Directory.Documents,

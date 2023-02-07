@@ -1,87 +1,52 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { IonButton, IonContent, IonIcon, IonPage, IonSelect, IonSelectOption } from "@ionic/react";
 import If from '../components/If'
 import Dropdown from "../components/Dropdown/Dropdown";
-import { Category } from "../controllers/types";
+import { Category } from "../types/category";
 import { trashOutline } from "ionicons/icons";
 import './Products.scss'
-import { DiskController } from "../controllers/disk/diskController";
+import { useProducts } from "../context/ProductsContext";
 
 
 export default function Products() {
-  // const { products, addProduct, addCategory, deleteProduct, deleteCategory } = useProducts()
+  const { categories, service } = useProducts()
   const [open, setOpen] = useState(false)
   const [categorySelection, setCategorySelection] = useState('')
-  const productInputRef = useRef<HTMLInputElement>(null)
-  const categoryInputRef = useRef<HTMLInputElement>(null)
   const [isDeleteMode, setIsDeleteMode] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const [items, setItems] = useState<Category[]>([
-    {
-      name: "Dairy",
-      products: ["Milk", 'Cheese']
-    },
-    {
-      name: "Meats",
-      products: ['Rib-eye', 'Stake']
-    },
-    {
-      name: "Vegetables",
-      products: [],
-    }
-  ])
+
+  const productInputRef = useRef<HTMLInputElement>(null)
+  const categoryInputRef = useRef<HTMLInputElement>(null)
+
+  const getProduct = () => productInputRef.current!.value
+  const getCategory = () => categoryInputRef.current!.value
 
   function matchingProducts(category: Category): string[] {
     return category.products.filter(product => product.toLowerCase().includes(searchValue.toLowerCase()))
   }
 
-  // async function writeFile() {
-  //   await Filesystem.writeFile({
-  //     path: 'text2.txt',
-  //     data: "This is a test 1",
-  //     directory: Directory.Documents,
-  //     encoding: Encoding.UTF8,
-  //   })
-  // }
-
-  useEffect(() => {
-    const controller = new DiskController()
-    controller.loadData()
-
-  }, [])
-
   function addProduct() {
-    if (productInputRef.current!.value === '' || categorySelection === '') return
-    const product = productInputRef.current!.value
-    setItems(prev => prev.map(category => {
-      if (category.name !== categorySelection) return category
-      return { name: category.name, products: [...category.products, product] }
-    }))
+    const product = getProduct()
+    if (!product || !categorySelection) return
+
+    service.addProduct(product, categorySelection)
     productInputRef.current!.value = ''
   }
 
   function addCategory() {
-    if (categoryInputRef.current!.value === '') return
-    const category = categoryInputRef.current!.value
-    setItems(prev => [...prev, { name: category, products: [] }])
+    const category = getCategory()
+    if (!category) return
+
+    service.addCategory(category)
     categoryInputRef.current!.value = ''
   }
 
-  function deleteProduct(product: string) {
-    setItems(prev => {
-      return prev.map(category => {
-        return {
-          name: category.name,
-          products: category.products.filter(prod => prod !== product)
-        }
-      })
-    })
+  function deleteProduct(product: string, category: string) {
+    service.deleteProduct(product, category)
   }
 
   function deleteCategory(category: string) {
-    setItems(prev => {
-      return prev.filter(cat => cat.name !== category)
-    })
+    service.deleteCategory(category)
   }
 
   function generateTitle(text: string): JSX.Element {
@@ -118,8 +83,8 @@ export default function Products() {
               <p>Under Category:</p>
               <IonSelect placeholder={'Choose a category'} onIonChange={e => setCategorySelection(e.detail.value)}>
                 {
-                  items.map((value, index) => (
-                    <IonSelectOption key={index}>{value.name}</IonSelectOption>
+                  categories.map((category, index) => (
+                    <IonSelectOption key={index}>{category.name}</IonSelectOption>
                   ))
                 }
               </IonSelect>
@@ -131,18 +96,18 @@ export default function Products() {
             </div>
           </div>
         </If>
-        <If condition={items.length === 0}>
+        <If condition={categories.length === 0}>
           <div className="container empty">
             <p>You have no products here...</p>
           </div>
         </If>
-        <If condition={items.length > 0}>
+        <If condition={categories.length > 0}>
           {
-            items.map((category, index) => (
+            categories.map((category, index) => (
               <Dropdown title={generateTitle(category.name)} key={index} onClick={() => isDeleteMode && deleteCategory(category.name)}>
                 {
                   matchingProducts(category).map((product, index) => (
-                    <Dropdown.Item key={index} onClick={() => isDeleteMode && deleteProduct(product)}>
+                    <Dropdown.Item key={index} onClick={() => isDeleteMode && deleteProduct(product, category.name)}>
                       {generateTitle(product)}
                     </Dropdown.Item>
                   ))
