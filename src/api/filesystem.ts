@@ -70,4 +70,24 @@ export class FileSystem {
     })
     return JSON.parse(contents.data)
   }
+
+  async removeDir(path: string): Promise<void> {
+    const dirExists = await this.exists(path)
+    if (!dirExists) return
+
+    await fs.rmdir({
+      path: path,
+      directory: this.directory,
+      recursive: true
+    })
+  }
+
+  async removeFile(path: string): Promise<void> {
+    if (!await this.exists(path)) return
+
+    await fs.deleteFile({
+      path: path,
+      directory: this.directory
+    })
+  }
 }
