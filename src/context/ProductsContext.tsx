@@ -1,6 +1,6 @@
 import { useContext, createContext, PropsWithChildren, useState, useEffect } from "react";
 import { Category } from "../types/category";
-import { DiskController } from "../controllers/products/disk";
+import { DiskController } from "../controllers/products/diskController";
 import { ProductService } from '../services/productService';
 
 interface ContextProps {
@@ -21,7 +21,7 @@ export default function ProductsProvider(props: Props) {
   const service: ProductService = new ProductService(new DiskController(), setCategories)
 
   useEffect(() => {
-    service.initProductsState()
+    service.initialize()
   }, [])
 
 

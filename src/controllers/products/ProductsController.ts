@@ -1,7 +1,7 @@
 import { Category } from "../../types/category";
 
 export interface ProductsController {
-  loadData: () => Promise<Category[]>
+  getData: () => Promise<Category[]>
 
   // Category functions
   addCategory: (name: string) => void

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction}  from 'react'
-import { ProductsController } from "../controllers/products/productsController";
+import { ProductsController } from "../controllers/products/ProductsController";
 import { Category } from "../types/category";
 
 export class ProductService {
@@ -11,8 +11,8 @@ export class ProductService {
     this.setState = setState
   }
 
-  async initProductsState() {
-    const data = await this.controller.loadData()
+  async initialize() {
+    const data = await this.controller.getData()
     this.setState(data)
   }
 

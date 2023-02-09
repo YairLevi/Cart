@@ -1,4 +1,4 @@
-import { ProductsController } from "./productsController";
+import { ProductsController } from "./ProductsController";
 import { Category } from "../../types/category";
 import { Directory } from "@capacitor/filesystem";
 import { FileSystem } from "../../api/filesystem";
@@ -44,7 +44,7 @@ export class DiskController implements ProductsController {
   deleteProduct(name: string, category: string): void {
   }
 
-  async loadData(): Promise<Category[]> {
+  async getData(): Promise<Category[]> {
     const dirExists = await fileSystem.exists(this.path)
     if (!dirExists) {
       await fileSystem.makeDir(this.path)
