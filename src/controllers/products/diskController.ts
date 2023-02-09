@@ -38,10 +38,15 @@ export class DiskController implements ProductsController {
     await fileSystem.writeFile(this.getCategoryPath(category), JSON.stringify(categoryJson))
   }
 
-  deleteCategory(name: string): void {
+  async deleteCategory(name: string): Promise<void> {
+    await fileSystem.removeFile(this.getCategoryPath(name))
   }
 
-  deleteProduct(name: string, category: string): void {
+  async deleteProduct(name: string, category: string): Promise<void> {
+    const categoryPath = this.getCategoryPath(category)
+    const categoryJson: Category = await fileSystem.readFile(categoryPath)
+    categoryJson.products = categoryJson.products.filter(product => product !== name)
+    await fileSystem.writeFile(categoryPath, JSON.stringify(categoryJson))
   }
 
   async getData(): Promise<Category[]> {
