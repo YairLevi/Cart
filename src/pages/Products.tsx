@@ -49,17 +49,13 @@ export default function Products() {
     service.deleteCategory(category)
   }
 
-  function generateTitle(text: string): JSX.Element {
-    if (isDeleteMode) {
-      return (
-        <div className={'line-container'}>
-          <IonIcon icon={trashOutline}/>
-          {text}
-        </div>
-      )
-    }
-
-    return <>{text}</>
+  function deleteTitle(text: string) {
+    return (
+      <div className={'line-container'}>
+        <IonIcon icon={trashOutline}/>
+        {text}
+      </div>
+    )
   }
 
 
@@ -102,19 +98,36 @@ export default function Products() {
           </div>
         </If>
         <If condition={categories.length > 0}>
-          {
-            categories.map((category, index) => (
-              <Dropdown title={generateTitle(category.name)} key={index} onClick={() => isDeleteMode && deleteCategory(category.name)}>
-                {
-                  matchingProducts(category).map((product, index) => (
-                    <Dropdown.Item key={index} onClick={() => isDeleteMode && deleteProduct(product, category.name)}>
-                      {generateTitle(product)}
-                    </Dropdown.Item>
-                  ))
-                }
-              </Dropdown>
-            ))
-          }
+          <If condition={isDeleteMode}>
+            {
+              categories.map((category, index) => (
+                <Dropdown title={deleteTitle(category.name)} key={index} onClick={() => deleteCategory(category.name)}>
+                  {
+                    matchingProducts(category).map((product, index) => (
+                      <Dropdown.Item key={index} onClick={() => deleteProduct(product, category.name)}>
+                        {deleteTitle(product)}
+                      </Dropdown.Item>
+                    ))
+                  }
+                </Dropdown>
+              ))
+            }
+          </If>
+          <If condition={!isDeleteMode}>
+            {
+              categories.map((category, index) => (
+                <Dropdown title={category.name} key={index}>
+                  {
+                    matchingProducts(category).map((product, index) => (
+                      <Dropdown.Item key={index}>
+                        {product}
+                      </Dropdown.Item>
+                    ))
+                  }
+                </Dropdown>
+              ))
+            }
+          </If>
         </If>
       </IonContent>
     </IonPage>
